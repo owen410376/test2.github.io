@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>猜数字游戏</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-image: url("background-image.gif");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+    }
+    h1 {
+      color: red;
+    }
+    input {
+      padding: 40px;
+      margin: 20px;
+    }
+    button {
+      padding: 8px 16px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    .container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .game-box {
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .game-box input[type="number"] {
+      margin-top: 10px;
+    }
+    .mouse-trail {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: #ffeb3b;
+      border-radius: 50%;
+      pointer-events: none;
+      transition: transform 0.3s;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>猜數字遊戲</h1>
+  <div class="game-box">
+    <p>我想一個1到100之间的随機数，猜猜看是多少：</p>
+    <input type="number" id="guessInput" min="1" max="100" required>
+    <button onclick="checkGuess()">猜！</button>
+    <p id="resultText"></p>
+  </div>
+</div>
+
+<script>
+  const fireworksContainer = document.querySelector('.container');
+  const mouseTrails = [];
+
+  fireworksContainer.addEventListener('mousemove', createMouseTrail);
+
+  function createMouseTrail(event) {
+    const mouseTrail = document.createElement('span');
+    mouseTrail.classList.add('mouse-trail');
+    mouseTrail.style.left = event.clientX + 'px';
+    mouseTrail.style.top = event.clientY + 'px';
+    fireworksContainer.appendChild(mouseTrail);
+    mouseTrails.push(mouseTrail);
+
+    setTimeout(() => {
+      mouseTrail.remove();
+      mouseTrails.shift();
+    }, 300);
+  }
+
+  // 清除鼠标轨迹
+  function clearMouseTrails() {
+    while (mouseTrails.length > 0) {
+      const trail = mouseTrails.shift();
+      trail.remove();
+    }
+  }
+
+  // 生成1到100之间的随机数
+  const randomNumber = Math.floor(Math.random() * 100) + 1;
+  let attempts = 0;
+
+  function checkGuess() {
+    const guessInput = document.getElementById('guessInput');
+    const resultText = document.getElementById('resultText');
+    const guess = parseInt(guessInput.value);
+
+    if (isNaN(guess) || guess < 1 || guess > 100) {
+      resultText.textContent = '輸入1到100之間有效数字！';
+    } else {
+      attempts++;
+
+      if (guess === randomNumber) {
+        resultText.textContent = `恭喜你，猜對了！你一共猜了${attempts}次。`;
+        guessInput.disabled = true;
+      } else if (guess < randomNumber) {
+        resultText.textContent = '猜的數字太小，再試一次。';
+      } else {
+        resultText.textContent = '猜的數字太大了，请再試一次。';
+      }
+    }
+
+    guessInput.value = '';
+    guessInput.focus();
+    clearMouseTrails();
+  }
+</script>
+</body>
+</html>

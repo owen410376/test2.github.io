@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Loading</title>
+  <style>
+    body {
+      overflow: hidden;
+    }
+    .background-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.8;
+      background-color: black;
+      animation: backgroundAnimation 10s linear infinite;
+    }
+    .loading-overlay {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      z-index: 9999;
+    }
+    .loading-spinner {
+      border: 16px solid #f3f3f3;
+      border-top: 16px solid #3498db;
+      border-radius: 50%;
+      width: 120px;
+      height: 120px;
+      animation: spin 2s linear infinite;
+      margin-bottom: 16px;
+    }
+    .loading-text {
+      color: white;
+      font-size: 24px;
+      animation: blink 1s linear infinite;
+    }
+    .play-button {
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      font-size: 18px;
+      border: none;
+      cursor: pointer;
+      outline: none;
+      transition: background-color 0.3s;
+    }
+    .play-button:hover {
+      background-color: #2980b9;
+      transform: scale(1.1);
+    }
+    .play-button.clicked {
+      animation: buttonClick 0.3s ease-in-out;
+    }
+    .loading-text {
+      color: white;
+      font-size: 24px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes blink {
+      0% { color: white; }
+      50% { color: yellow; }
+      100% { color: white; }
+    }
+    @keyframes backgroundAnimation {
+      0%, 100% { background-image: url("image2.jpg"); }
+      25% { background-image: url("image4.jpg"); }
+      50% { background-image: url("image3.gif"); }
+      75% { background-image: url("image5.gif"); }
+    }
+    @keyframes buttonClick {
+      0% { transform: scale(1); }
+      50% { transform: scale(0.9); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+<div class="background-overlay"></div>
+<div class="loading-overlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Loading...</div>
+  <div class="loading-subtext">猜數字</div>
+</div>
+
+<div class="play-button" onclick="startLoading()">Play Game</div>
+
+<script>
+  function startLoading() {
+    var loadingOverlay = document.querySelector('.loading-overlay');
+    var playButton = document.querySelector('.play-button');
+    var backgroundOverlay = document.querySelector('.background-overlay');
+
+    playButton.classList.add('clicked'); // 添加点击动画类
+
+    setTimeout(function() {
+      playButton.style.display = 'none';
+      loadingOverlay.style.display = 'flex';
+      backgroundOverlay.style.backgroundColor = 'black'; // 设置背景颜色为黑色
+
+      setTimeout(function() {
+        document.querySelector('.loading-overlay').style.display = 'none';
+        document.body.style.overflow = 'auto';
+        jumpToGame();
+      }, 3000);
+    }, 300); // 等待点击动画完成后开始加载
+  }
+  function jumpToGame() {
+    var gameUrl = "http://localhost:63342/Web/math.html?_ijt=c0v6s0tarigh9b1r5r0fibd6bm&_ij_reload=RELOAD_ON_SAVE";
+    window.location.href = gameUrl;
+  }
+</script>
+</body>
+</html>
